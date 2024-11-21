@@ -13,6 +13,9 @@ headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
 response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.text, "html.parser")
 
+
+append_digits = [2, 6, 12, 13, 14, 15, 16, 17, 18, 19]
+
 def process_section(input_id, date_id):
 
     # Create the URL for the section
@@ -45,7 +48,7 @@ def get_section_container(class_string):
 
     section = soup.find("div", id=class_string)
     all_rows = section.find_all("tr")
-    del all_rows[0:3] # Trims out the starting preamble from the list so we purely have tasks.
+    del all_rows[0:2] # Trims out the starting preamble from the list so we purely have tasks.
     return all_rows
 
 # Takes in the section container and breaks down each row into table data cells from which to extract data.
@@ -56,8 +59,6 @@ def extract_cells(section_container):
         day = format_day(segment[0].text)
         day_tasks = segment[1].text.split(";")
         night_tasks = None
-
-        
         store_task_in_diary(build_task_package(date, day, "Day", day_tasks))
 
         if len(segment) > 2:
@@ -97,9 +98,9 @@ def format_day(day):
     
 def test(row_data):
     for row in row_data:
-        creeate_task_package(row)
+        create_task_package(row)
 
-def creeate_task_package():
+def create_task_package():
     date = None
     day  = None
 
@@ -125,50 +126,26 @@ def creeate_task_package():
                 data_entry['Action Type'] = get_action_type(entry_text.upper())
             
                 diary.append(data_entry)
-        
+    #diary.append({})
 
-
-    
-def scrape_dates():
-    # Get and parse the page
-
-    # Find all <td> elements with the desired style
-    all_days = soup.find_all("td", style="width:2.9732%;text-align:center;") # Pulls dates/days
-    all_rows = soup.find_all("tr")
-    all_steps = soup.find_all("td", style="text-align:justify;") # Pulls steps per day
-
-    #for row in all_rows:
-      #  data = row.find("td", style="width:2.9732%;text-align:center;")
-       # day = data.text
-       # date = data.text
-
-    # Extract data for each <td>
-    for day in all_days:
-        item = {}
-        # Extract the content of the <td> element
-        content = day.text
-        # If there are at least two lines (Date and Day)
-        item['Date'] = content[0:5] # Date (e.g., 04/09)
-        item['Day'] = content[5:8]  # Day (e.g., Sat)
-        data.append(item)  # Add the extracted data to the list
-
-    # Print the number of days found
-   # print(f"Total days found: {len(all_days)} Table: {all_rows[0]}")
-    proceed = False
-
-def main():
+def start_scraping(input):
     # Construct Class String
-    class_string = get_class_string(2)
+    class_string = get_class_string(input)
     # Isolate section container for the selected month
     section_container = get_section_container(class_string)
     # Process Rows
     extract_cells(section_container)
+    
 
 
+def main():
+
+    for digit in append_digits:
+        start_scraping(digit)
 
     # Convert to pandas DataFrame for easier manipulation
     df = pd.DataFrame(diary)
-    df.to_json("Export.json")
+    df.to_csv("Export.csv")
     # Display the DataFrame
     print(df)
     proceed = False
