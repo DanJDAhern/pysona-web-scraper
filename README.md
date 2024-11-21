@@ -1,4 +1,4 @@
-# Pysona Royal Web Scraper
+# Pysona Web Scraper
 
 A simple Python-based web scraper, specifically designed to gather and compartmentalise information laid out on [Montyzu's PSN Profiles 100% Perfect Schedule guide for Persona 5 Royal on PS5.](https://psnprofiles.com/guide/11946-persona-5-royal-100-perfect-schedule#2-april)
 
