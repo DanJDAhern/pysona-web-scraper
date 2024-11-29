@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import json
 
 current_page = 1
 proceed = True
@@ -144,11 +145,13 @@ def main():
 
     # Convert to pandas DataFrame for easier manipulation
     df = pd.DataFrame(diary)
-    df.to_csv("Export.csv")
+    # df.to_json("Export.json")
     # Display the DataFrame
-    print(df)
+    
     
 while(proceed):
    
     main()
+    with open("Export.json", "w") as outfile:
+        json.dump(diary, outfile)
     proceed = False
