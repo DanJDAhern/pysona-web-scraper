@@ -126,7 +126,7 @@ def create_task_package():
                 data_entry['Action Type'] = get_action_type(entry_text.upper())
             
                 diary.append(data_entry)
-    #diary.append({})
+    diary.append({})
 
 def start_scraping(input):
     # Construct Class String
@@ -136,7 +136,6 @@ def start_scraping(input):
     # Process Rows
     extract_cells(section_container)
     
-
 
 def main():
 
@@ -148,8 +147,7 @@ def main():
     df.to_csv("Export.csv")
     # Display the DataFrame
     print(df)
-    proceed = False
-
+    
 while(proceed):
    
     main()
