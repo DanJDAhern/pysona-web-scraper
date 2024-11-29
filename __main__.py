@@ -60,21 +60,19 @@ def extract_cells(section_container):
         day = format_day(segment[0].text)
         day_tasks = segment[1].text.split(";")
         night_tasks = None
-        store_task_in_diary(build_task_package(date, day, "Day", day_tasks))
 
         if len(segment) > 2:
             night_tasks = segment[2].text.split(";")
-            store_task_in_diary(build_task_package(date, day, "Night", night_tasks))
-            
         
+        store_task_in_diary(build_task_package(date, day, day_tasks, night_tasks))
     return 
 
-def build_task_package(date, day, time_of_day, tasks):
+def build_task_package(date, day, day_tasks, night_tasks):
     task = {}
     task['date'] = date
     task['day'] = day
-    task['time_of_day'] = time_of_day
-    task['tasks'] = tasks
+    task['day_tasks'] = day_tasks
+    task['night_tasks'] = night_tasks
 
     return task
 
@@ -105,7 +103,7 @@ def create_task_package():
     date = None
     day  = None
 
-    data_entry = {'Date': date, 'Day': day, 'Time of Day': "Day", 'Action Type': "Action", 'Missable': "", 'Steps': []}
+    data_entry = {'Date': date, 'Day': day, 'Action Type': "Action", 'Missable': "", 'Steps': []}
     steps = []
     entry_text = input.text
 
@@ -119,9 +117,6 @@ def create_task_package():
                 data_entry['Date'] = date 
                 data_entry['Day'] = day
             
-                if (len(diary) != 0):
-                    if (day == diary[len(diary)-1]['Day']) :
-                        data_entry['Time of Day'] = "Night"
                 steps.append(entry_text.split(";"))
                 data_entry['Steps'] = steps
                 data_entry['Action Type'] = get_action_type(entry_text.upper())
